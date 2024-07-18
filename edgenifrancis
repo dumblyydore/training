@@ -1,0 +1,184 @@
+
+!
+! Last configuration change at 00:50:36 UTC Thu Jul 18 2024
+!
+version 16.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+platform qfp utilization monitor load 80
+platform punt-keepalive disable-kernel-core
+!
+hostname EDGE-11
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+no logging console
+enable secret 5 $1$ySWl$DF.MUeH3cgEbwe5DBXqzY.
+!
+no aaa new-model
+!
+no ip domain lookup
+!
+!
+!
+login on-success log
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+multilink bundle-name authenticated
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3554684029
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3554684029
+ revocation-check none
+ rsakeypair TP-self-signed-3554684029
+!
+!
+crypto pki certificate chain TP-self-signed-3554684029
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 33353534 36383430 3239301E 170D3234 30373137 32333532 
+  32345A17 0D333030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 35353436 
+  38343032 39308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201 
+  0A028201 0100A062 ADF74805 FBCEFF8D 028FD71A 2B4B9EE3 97F57A01 F71C5651 
+  EBCCF93E 2534F1EC 557326BF 6E67A74D FD8907F6 F22F17E2 7DE3CA59 4A7974E0 
+  C85A4138 6A11196F 1A7D2557 3B4CEF58 EFF1A2DA 2589EF30 83A30786 1AD4EC45 
+  F1ABDCE3 972A5B78 A1A15CC1 0B681024 E55A749C BA98C3F4 7F6C6815 79A9FDB3 
+  3B204DB4 7D4B67A4 25C3CCFA E1E607B1 8A639C09 CD6DD6EC 02737B24 B2731573 
+  5BBBB443 E1481A58 D0A8C491 81E838BD 986E0B7F 385920B5 635ECB8E C53773EB 
+  22230FB8 3B61A428 21508FD7 BD89044D D48B8CCC F4F58B17 E3BC9BC9 A4391871 
+  A5794ECB 1BF19593 A5D93224 554B4B45 73C9F9B0 290F52A0 246C10A8 CD4A5BE0 
+  E8FCE981 50690203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 
+  301F0603 551D2304 18301680 1428197E 4727D39D 3D194773 4A136680 284599C2 
+  9E301D06 03551D0E 04160414 28197E47 27D39D3D 1947734A 13668028 4599C29E 
+  300D0609 2A864886 F70D0101 05050003 82010100 63012D79 2AC92C0D 5B8418D1 
+  C66DCC83 785DD9E3 807F1AAE E9CFAF55 F1CAFC56 FE80C438 F539BD1D 0B215DDA 
+  C4C4F7EC A7E45712 0E1CB9DD BF49A948 568C22EE 0D02293C 6976F3D0 0EFF85E7 
+  16FA1563 882989AC EB91EA18 C0BA7347 E32B5D48 4C681733 C72F95C7 0B92BD0E 
+  FEC9E417 00D8CBC3 0387F7D7 23D0DF8D 3BCEF7DA C87619E6 DFEBA6EA 1ED41A66 
+  20B96E53 DA23E90C 80FBE588 10C5D887 6EBC9938 0392D63B 258FA39D B9873EA4 
+  F879C04B 896DFFD3 9C1CA244 9365D2C1 83AD93E4 00FF2754 D5912C17 6E6A171B 
+  F7259EC8 D26C61E5 72121CA4 F038510C 4C7B9FCF B9615B92 608A5591 E7BC90E1 
+  B8FB9759 86A1D1A4 6B386320 117FCA50 E62BA26B
+  	quit
+!
+license udi pid ISR4321/K9 sn FDO21450AN3
+license boot level securityk9
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+ mode none
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description VIRTUALIP
+ ip address 11.0.0.1 255.255.255.255
+!
+interface GigabitEthernet0/0/0
+ description INSIDE
+ ip address 10.11.11.1 255.255.255.0
+ negotiation auto
+!
+interface GigabitEthernet0/0/1
+ description OUTSIDE
+ ip address 200.0.0.11 255.255.255.0
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ negotiation auto
+!
+router ospf 1
+ router-id 11.0.0.1
+ network 10.11.11.0 0.0.0.255 area 0
+ network 11.0.0.0 0.0.0.255 area 0
+ network 200.0.0.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip http client source-interface GigabitEthernet0/0/1
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ password 7 044B0A151C
+ login
+ transport input none
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ exec-timeout 0 0
+ password 7 0014121517
+ login
+line vty 5 14
+ exec-timeout 0 0
+ password 7 0014121517
+ login
+!
+!
+!
+!
+!
+!
+end

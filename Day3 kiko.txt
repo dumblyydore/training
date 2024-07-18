@@ -1,0 +1,342 @@
+1505 = 11
+22 = 5
+201 = 8
+2700 = 12
+5 = 3
+321 = 9
+2 = 1
+4800 = 13
+50 = 6
+88 = 7
+12 = 4
+8900 = 14
+28 = 5
+75 = 7
+
+================================
+1300
+
+C:1300 is 11 bits
+S:/32 -/11 is /21
+I:Ipasok sa 3rd si 8i
+
+accenturecebu.com: 10.0.8.0/21
+1st: 10.0.8.1 - 10.0.15.254
+Last: 10.0.15.255
+
+NOTaccenturecebu.com: 10.0.16.0/21
+
+
+config t
+vlan 25
+ name accenturecebu.com
+ exit
+Int vlan 25
+ no shut
+ ip add 10.0.8.1 255.255.248.0
+ip dhcp excluded-add 10.0.8.1 10.0.8.80
+ip dhcp pool accenturecebu.com
+ network 10.0._._ 255.255._._
+ default-router 10.0._._
+ domain-name ____.com
+ dns-server 10.m.1.10
+ option 150 ip 10.m.100.8
+ Int Fa 0/7
+  swi acc vlan 25
+  do sh ip dhcp binding
+======================
+2300
+
+C:2300 is 12 bits
+S:/32 -/12 is /20
+I:Ipasok sa 3rd si 16i
+
+TELUS.com: 10.0.16.0/20
+1st: 10.0.16.1 - 10.0.31.254
+Last: 10.0.31.255
+
+NOTTELUS.com: 10.0.32.0/20
+===========================
+DAY 4:
+TASK 1: IPv4 subnetting in RealWorld/Exam
+"5 hit combo"
+
+you found laptop w/ ip add of 10.79.52.53/20
+
+
+
+1.Network: 10.79.48.0/20  next:10.79.96.0/20
+2.1st: 10.79.48.1 - 10.79.63.255
+3.last/bc: 10.79.63.255
+4.host:
+	/32 -/? = /20 12bits, 2000 hosts
+5.subnet
+ 	/8 + /? = /20 12bits, 2000 subnets
+=============
+you found tablet w/ ip add of 10.110.35.53/21
+3rd,8i
+1.Network: 10.110.32.0/21 next:10.110.40/21
+2. 1st: 10.110.32.1 - 10.110.39.255
+3. Last/BC: 10.110.39.255
+4. Hosts
+	/32 -/? = /21    11 bits, 1000 host
+5. Subnets
+	/8 + /? = /21    13 bits, 4000 subnets
+==============
+HOW TO GET FIRED!!! factory reset routing
+
+conf t
+no ip routing
+ip routing
+end
+
+checking:
+sh ip route
+sh ip protocol
+*** IP Routing is NSF aware ***
+
+TASK3.1 STATIC ROUTING FOR min wages:
+
+PC:10.11.1.10
+
+STATIC ROUTING
+- most basic routing, no CPU, no RAM
+-home routers
+
+@EDGE:
+conf t
+ip route 10.12.0.0 255.255.0.0 200.0.0.12 1
+EDGE-11(config)#do sh run | i route 
+ip route 10.12.0.0 255.255.0.0 200.0.0.12
+ip route 10.21.0.0 255.255.0.0 200.0.0.21
+ip route 10.22.0.0 255.255.0.0 200.0.0.22
+ip route 10.31.0.0 255.255.0.0 200.0.0.31
+ip route 10.32.0.0 255.255.0.0 200.0.0.32
+ip route 10.41.0.0 255.255.0.0 200.0.0.41
+ip route 10.42.0.0 255.255.0.0 200.0.0.42
+
+for VLAN
+ip route 10.11.0.0 255.255.0.0 10.11.11.4
+
+
+
+@corebaba11: default routing
+conf t
+ip route 0.0.0.0 0.0.0.0 10.11.11.1 1
+COREbaba11(config)#do sh ip route st
+COREbaba11(config)#do sh ip route static 
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       + - replicated route, % - next hop override
+
+Gateway of last resort is 10.11.11.1 to network 0.0.0.0
+
+S*    0.0.0.0/0 [1/0] via 10.11.11.1
+============
+STATIC routing sa win
+
+route add 10.0.0.0 mask 255.0.0.0 10.11.1.4
+route add 200.0.0.0 mask 255.255.255.0 10.11.1.4
+
+DEFAULT route in linux comp
+====================
+
+conf t
+no ip routing
+ip routing
+============
+how to give ip add in linux
+
+sudo ifconfig eth0 10.11.1.9 netmask 255.255.255.0 up
+sudo route add default gw 10.11.1.4
+==========
+CUCM
+ip route 0.0.0.0 0.0.0.0 10.11.100.4
+SW
+ip route 0.0.0.0 0.0.0.0 10.11.11.1
+
+======================================================
+DYNAMIC ROUTING:
+OSPF (Open Shortest Path First)
+-all areas less than 50 devices must use area 0
+
+@edge:
+conf t
+no router ospf 1
+router ospf 1
+router-id 11.0.0.1
+network 10.11.11.0 0.0.0.255 area 0
+network 11.0.0.1 0.0.0.255 area 0
+network 200.0.0.0 0.0.0.255 area 0
+end
+
+@corebaba:
+conf t
+no router ospf 1
+router ospf 1
+network 10.11.1.0 0.0.0.255 area 0
+network 10.11.10.0 0.0.0.255 area 0
+network 10.11.11.0 0.0.0.255 area 0
+network 10.11.50.0 0.0.0.255 area 0
+network 10.11.100.0 0.0.0.255 area 11
+
+
+@CUCM
+conf t
+no router ospf 1
+router ospf 1
+network 10.11.100.0 0.0.0.255 area 11
+
+
+kill OSPF:
+conf t
+no router ospf 1
+end
+=================
+HOW TO MONITOR OSPF IN EXAM
+OSPF ELECTION" "Dite ELF"
+Down: NO adjacency, hello sent
+Init: build adjency
+TwoWay: hello was receive
+Exstart: databse description: DBD
+Exchange: LinkState UPdates(inside LSU is LSAdvertisement:type1"O"||type3"OIA"
+Loading: routing is being loaded
+Full
+=====================
+TASK 5: ENHANCE INTERIOR GATEWAY ROUTING PROTOCOL: EIGRP
+-runs in ALL Cisco brand
+
+CCNA:static,default,ospf,IPv6
+CCNP:eigrp,bgp,vpn
+
+
+TASK 6: CONFIGURING CISCO CLOUD SERVICES ROUTER
+
+conf t
+no logging console
+no ip domain-lookup
+int gi3
+noshut
+ip add 192.168.103.11 255.255.255.0
+do wr
+end
+
+
+===============
+TASK 7 CONFIG IPV6 IN CISCO CLOUD SERVICE RTR
+Method1: autoconfig: 100% auto
+
+conf t
+line vty 0 14
+exec-timeout 0 0
+ipv6 unicast-routing
+int gi 2
+ipv6 enable
+ipv6 address autoconfig
+do sh ipv6 int brief
+
+Method 2:Extended UserID/EUI-64: 50-50
+
+conf t
+ipv6 unicast-routing
+int gi 2
+no shut
+ipv6 address face:cafe:aced:dace::/64 eui-64
+ipv6 address d00d:b0b0:d0d0:b00b::/64 eui-64
+ipv6 address baba:beb0:d0d0:bb00::/64 eui-64
+=======================
+how to subnet ipv6: /49 --- /64
+
+EX1:sykesasia is using fafa:baba:dada::/48 but will have subnet: pilot 240 offices
+
+use CAI: convert,add,ichamba
+Convert: 50 is 8 bits
+Addto orig /: /48 + /8 = /56
+ichambamo: 00	04	
+
+
+EX1:sykesasia is using fafa:baba:dada::/48 but will have subnet: pilot 96 offices
+
+use CAI: convert,add,ichamba
+Convert: 50 is 7 bits
+Addto orig /: /48 + /8 = /56
+ichambamo: 00	04	
+
+fafa:baba:dada::00
+fafa:baba:dada::02
+fafa:baba:dada::04
+fafa:baba:dada::06
+fafa:baba:dada::08
+fafa:baba:dada::0a
+
+EX1:vxi.com is using fafa:baba:dada::/48 but will have subnet: pilot 800 offices
+convert 800 is 10 bits
+add 48 + 10 = 58
+ichamba
+fafa:baba:dada::000
+fafa:baba:dada::004
+fafa:baba:dada::008
+fafa:baba:dada::00c
+fafa:baba:dada::010
+
+deploying:
+conf t
+int loopback 1
+ipv6 address fafa:baba:dada:004::1/58
+int loopback 2
+ipv6 address fafa:baba:dada:008::1/58
+int loopback 3
+ipv6 address fafa:baba:dada:00C::1/58
+int loopback 4
+ipv6 address fafa:baba:dada:010::1/58
+int loopback 5
+ipv6 address fafa:baba:dada:014::1/58
+do sh ipv6 int brief
+================================================
+CHECKINGS::
+sh ip route
+sh ip route static
+sh ip protocol
+sh ip int brief
+sh run | i route
+sh ip route connected
+sh ip ospf neigh
+sh ip route ospf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

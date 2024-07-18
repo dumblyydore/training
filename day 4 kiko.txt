@@ -141,6 +141,241 @@ sh ntp associations
 sh clock
 *	03:45:49.244 UTC Thu Jul 18 2024
 
+===============================================
+TASK 8:file transfer protocol FTP--layer 7 protocol that uses layer 4 port 21/20 tcp protocol
+
+step1
+
+step2 @powershell
+Install-WindowsFeature Web-FTP-server -IncludeAllSubFeature
+Import-Module WebAdministration
+
+@@@@
+COREbaba11#copy run ftp:
+Address or name of remote host []? 10.11.1.10
+Destination filename [corebaba11-confg]? corebabanikiko
+Writing corebabanikiko !
+3085 bytes copied in 2.634 secs (1171 bytes/sec)
+COREbaba11#
+===================================================================
+TASK 9: LEARNING BASIC ENCRYPTION USING SECURE SHELL
+config basic user and pass
+@corebaba
+conf t
+username admin privilege 15 secret pass
+username francis privilege 15 secret pass
+username inutil privilege 7 secret pass
+line vty 0 14
+login local
+exec-timeout 0 0
+end
+==================================================================
+TASK10: SSH instead if telnet (encrypted and secure)
+
+conf t
+ip domain-name rivanit.com
+crypto key generate rsa 1024
+ip ssh version 2
+ip ssh time-out 120
+end
+===================================================================
+TASK 11: TFTP-TrivialFTP - very fast not reliable 
+-user datagram protocol port 69
+
+FTP - slower but reliable
+ - uses seq,ack,window
+===================================================================
+TASK 12: HACK in penetration testing
+step1: security concepts(threats, vulnerabilities, exploits,mitigation techniques.)=MITRE framework
+
+step 2: attack basic-- get all the ip of victim
+if 149/445 is open u can attack the drive of victim
+
+
+nmap -sP 10.k.1.0/24
+nmap -v 10.k.1.10
+
+hack your classmate:
+cmd
+net use \\10.12.1.10\ipc$ /user:administrator
+net use s: \\10.12.1.10\d$
+mkdir pumasoksifranciskaygold
+
+
+how to know if someone in hacking u
+cmd
+netstat -s -p tcp
+===================================================================
+TASK 13: PROTECT WEB ABB AND SERVER
+MAKING BASIC FW: FORMULA
+	PROTOCOL 	HACKER	VICTIM 	PORT
+
+ex1. create a fw policy to meet the condition
+www.web8.com must allow only port http and https
+www.web9.com must allow dns and ssh and ping
+
+
+@@FWVPN
+conf t
+no ip access-list extended POLICY1
+ip access-list extended POLICY1
+permit tcp any host www.web8.com eq 80 log
+permit tcp any host www.web8.com eq 443 log
+permit tcp any host www.web9.com eq 53 log
+permit tcp any host www.web9.com eq 22 log
+permit icmp any host www.web9.com log
+int gi 3
+ip access-group POLICY1 in
+end
+
+
+===================================================================
+ex2. create a fw policy to meet the condition
+www.web8.com must allow only dns,ssh,http
+www.web9.com must allow only https,ssh,telnet
+
+@@FWVPN
+conf t
+no ip access-list extended POLICY2
+ip access-list extended POLICY2
+permit tcp any host www.web8.com eq 53 log
+permit tcp any host www.web8.com eq 22 log
+permit tcp any host www.web8.com eq 80 log
+permit tcp any host www.web9.com eq 443 log
+permit tcp any host www.web9.com eq 22 log
+permit tcp any host www.web9.com eq 23 log
+int gi 3
+ip access-group POLICY2 in
+end
+
+ex3. create a fw policy to meet the condition
+www.web8.com must allow only telnet,ssh,https,ping
+www.web9.com must allow only http,dns https,ping
+
+
+conf t
+no ip access-list extended POLICY3
+ip access-list extended POLICY3
+permit tcp any host www.web8.com eq 23 log
+permit tcp any host www.web8.com eq 22 log
+permit tcp any host www.web8.com eq 443 log
+permit icmp any host www.web8.com log
+permit tcp any host www.web9.com eq 480 log
+permit tcp any host www.web9.com eq 53 log
+permit tcp any host www.web9.com eq 443 log
+permit icmp any host www.web9.com log
+int gi 3
+ip access-group POLICY3 in
+end
+
+ex.3 use standard access list to block other classmates:
+@@edgee
+conf t
+no ip access-list standard BAWALSILA1
+ip access-list standard BAWALSILA1
+deny 10.12.0.0 0.0.255.255
+deny 10.22.0.0 0.0.255.255
+deny 10.32.0.0 0.0.255.255
+deny 10.42.0.0 0.0.255.255
+permit any
+int gi 0/0/1
+ip access-group BAWALSILA1 in
+do sh ip access-list BAWALSILA1
+
+removing fw policy
+int gi 0/0/1
+no ip access-group BAWALSILA1 in
+===================================================================
+@@edgee
+conf t
+no ip access-list standard BAWALSILA2
+ip access-list standard BAWALSILA2
+deny 10.31.0.0 0.0.255.255
+deny 10.32.0.0 0.0.255.255
+deny 10.41.0.0 0.0.255.255
+deny 10.42.0.0 0.0.255.255
+permit any
+int gi 0/0/1
+ip access-group BAWALSILA2 in
+============
+int gi 0/0/1
+no ip access-group BAWALSILA2 in
+===================================================================
+conf t
+no ip access-list standard BAWALSILA3
+ip access-list standard BAWALSILA3
+deny 10.21.0.0 0.0.255.255
+deny 10.21.0.0 0.0.255.255
+deny 10.31.0.0 0.0.255.255
+deny 10.32.0.0 0.0.255.255
+permit any
+int gi 0/0/1
+ip access-group BAWALSILA3 in
+=================
+int gi 0/0/1
+no ip access-group BAWALSILA3 in
+===================================================================
+conf t
+no ip access-list standard WALANGSALAMIN
+ip access-list standard WALANGSALAMIN
+deny 10.12.0.0 0.0.255.255
+deny 10.22.0.0 0.0.255.255
+deny 10.31.0.0 0.0.255.255
+permit any
+int gi 0/0/1
+ip access-group WALANGSALAMIN in
+===================================================================
+conf t
+no ip access-list standard SOULMATE
+ip access-list standard SOULMATE
+deny 10.21.0.0 0.0.255.255
+deny 10.22.0.0 0.0.255.255
+deny 10.31.0.0 0.0.255.255
+deny 10.32.0.0 0.0.255.255
+deny 10.41.0.0 0.0.255.255
+deny 10.41.0.0 0.0.255.255
+permit any
+int gi 0/0/1
+ip access-group SOULMATE in
+======================================================================================================================================
+===================================================================
+TASK 14:cisco w/ python
+
+
+import cli
+cfg1 = '''hostname PythonAPP
+'''
+
+cli.configurep(cfg1)
+===============================
+CREATE LOOPBACKS IN PYTHON
+import cli
+
+config_2 = '''hostname Mr_Python
+int loop 9
+ip add 9.9.9.9 255.255.255.255
+int loop 8
+ip add 8.8.8.8 255.255.255.255
+int loop 7
+ip add 7.7.7.7 255.255.255.255
+int loop 6
+ip add 6.6.6.6 255.255.255.255
+end
+'''
+
+cli.configurep(config_2)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

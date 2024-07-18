@@ -60,9 +60,9 @@ Gi2: 192.168.102.11 --linux 2 -- 192.168.102.22
 Gi3: 192.168.103.11 --linux 3 -- 192.168.103.33
 	            --linux 3a-- 192.168.103.34
 
-
+BLDGS:
 sudo ifconfig eth0 192.168._._ netmask 255.255.255.0 up
-sudo route add default gw 192.168.10._.11
+sudo route add default gw 192.168.10_.8
 =========================
 TASK 6: NAT network address translation
 NAT: proxy, tether, hotspot
@@ -71,15 +71,20 @@ give internet to all bldg:@ciscoAWS
 step1: give all the correct ip add
 
 conf t
+ipv6 unicast-routing
+no logging console
+line console 0
+exec-timeout 0 0
 int gi 1
 no shut
-ip add 192.168.108.11 255.255.255.0
+ip add 192.168.108.8 255.255.255.0
 int gi 2
 no shut
-ip add 192.168.102.11 255.255.255.0
+ip add 192.168.102.8 255.255.255.0
 int gi 3
 no shut
-ip add 192.168.103.11 255.255.255.0
+ip add 192.168.103.8 255.255.255.0
+ipv6 add a:a:a:a::a/64
 
 
 step 2: give static route to ciscoAWS:
@@ -120,6 +125,21 @@ icmp 192.168.108.11:22537  192.168.103.34:22537  4.2.2.2:22537         4.2.2.2:2
 icmp 192.168.108.69:35593  192.168.103.33:35593  8.8.8.8:35593         8.8.8.8:35593
 Total number of translations: 4
 ======================================================================================================================================
+TASK 7: NETWORK TIME PROTOCOL (NTP) - a network service that syncs all the timezones using port 123 udp
+
+conf t
+ip route 0.0.0.0 0.0.0.0 192.168.108.2
+ip domain lookup
+ip name-server 8.8.8.8 1.1.1.1 
+end
+ping time.google.com = (216.239.35.4)
+
+conf t
+ntp server 216.239.35.4
+sh ntp associations 
+	*~216.239.35.4    .GOOG.
+sh clock
+*	03:45:49.244 UTC Thu Jul 18 2024
 
 
 
